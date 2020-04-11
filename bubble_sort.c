@@ -2,7 +2,7 @@
 
 int main () {
 
-    int dataBase[10] = {66 ,5 ,32 ,25 ,88 ,16 ,9 ,48 ,98 ,3};
+    int dataBase[10] = {66 ,5 ,-32 ,25 ,88 ,16 ,9 ,48 ,98 ,3};
     int spots = 9,first = 0,sec = 1,strikes = 0, temp;
 
     printf("\nThe wrong order : ");

@@ -1,5 +1,5 @@
 #include <stdio.h>
- 
+
 void bubble_sort (int *dataBase, int arraySize) {
     int counter, temp, limit = arraySize, s = 1;
     while (s) {
@@ -15,15 +15,15 @@ void bubble_sort (int *dataBase, int arraySize) {
         limit--;
     }
 }
- 
+
 int main () {
     int dataBase[] = {15, 56, 12, -21, 1, 659, 3, 83, 51, 3, 135, 0};
-    int arraySize = dataBase / sizeof dataBase[0];
+    int arraySize = sizeof dataBase / sizeof dataBase[0];
     int counter;
-    for (counter = 0; counter < n; counter++)
-        printf("%d%s", dataBase[counter], counter == arraySize- 1 ? "\n" : " ");
-    bubble_sort(dataBase, n);
-    for (counter = 0; counter < n; counter++)
-        printf("%d%s", dataBase[counter], counter == arraySize- 1 ? "\n" : " ");
+    for (counter = 0; counter < arraySize; counter++)
+        printf("%d%s", dataBase[counter], counter == arraySize- 1 ? "\n" : " "); // Prints old array
+    bubble_sort(dataBase, arraySize);
+    for (counter = 0; counter < arraySize; counter++)
+        printf("%d%s", dataBase[counter], counter == arraySize- 1 ? "\n" : " "); // Prints new array
     return 0;
 }
