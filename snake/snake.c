@@ -79,10 +79,18 @@ int main () {
     box (win, 0, 0);
 
     keypad(win, TRUE);
-    nodelay(win, TRUE);
     scrollok(win, TRUE);
     keepMove = KEY_RIGHT;
 
+    mvwprintw(win, height/2, (width/2 - 12) ,"Press any key to start");
+    input = wgetch(win);
+        if (input != ERR ){
+            nodelay(win, TRUE);
+            //wrefresh(win);
+            werase(win);
+            box (win, 0, 0);
+            wrefresh(win);
+        }
     while (!gameOver) {
         input = wgetch(win);
 
