@@ -10,13 +10,16 @@ int input = 0;
 int keepMove;
 int yMax, xMax, height, width, startY, startX;
 
+//move the snake according to the keys that are being pressed
 void moveSnake(void) {
 
+    //moving the snake location in the arrey
     for (int i = snakeLenght; i > 0; i--) {
         snakeYX[0][i] = snakeYX[0][i-1];
         snakeYX[1][i] = snakeYX[1][i-1];
     }
 
+    //saving the key only if a key was pressed
     if (input != ERR) {
         keepMove = input;
     }
@@ -34,7 +37,7 @@ void moveSnake(void) {
         snakeYX[0][0]++;
     }
 }
-
+//setting the game window according to the terminal
 void setScreen (void) {
     getmaxyx(stdscr, yMax, xMax);
     height = yMax/2;
@@ -49,6 +52,7 @@ void setScreen (void) {
         width--;
 
 }
+//moves the snake to the opposite border once he hit a border
 void checkBor(void) {
     
     if (snakeYX[0][0] == (height - 1))
@@ -72,22 +76,25 @@ void fruitCor(void) {
 
 int main () {
 
-    //snake starting point
+    //snake starting point and direction
     snakeYX[1][0] = 20;
     snakeYX[0][0] = 8;
+    keepMove = KEY_RIGHT;
 
+    //ncurses initialization
     initscr();
     noecho();
     cbreak();
+
+    //game window initialization
     setScreen();
     WINDOW * win = newwin(height, width, startY, startX);
     refresh();
     box (win, 0, 0);
 
     keypad(win, TRUE);
-    scrollok(win, TRUE);
-    keepMove = KEY_RIGHT;
 
+    //start the game only after the player pressed a key
     mvwprintw(win, height/2, (width/2 - 12) ,"Press any key to start");
     input = wgetch(win);
         if (input != ERR ){
@@ -97,31 +104,36 @@ int main () {
             box (win, 0, 0);
             wrefresh(win);
         }
-    while (!gameOver) {
-        input = wgetch(win);
 
+
+    while (!gameOver) {
+
+        input = wgetch(win); //getting the key that was pressed
 
         moveSnake();
+
+        //print the snake and the fruit
         mvwaddch(win, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
         mvwaddch(win, snakeYX[0][0], snakeYX[1][0], '*');
 //        mvwprintw(win, snakeYX[0][0], snakeYX[1][0], "%d", snakeYX[1][0]);
         mvwaddch(win, fruitYX[0], fruitYX[1], '@');
         wrefresh(win);
 
+        //increase the snake size if a fruit was eaten
         if (snakeYX[0][0] == fruitYX[0] && snakeYX[1][0] == fruitYX[1]) {
             snakeLenght++;
             mvwaddch(win, fruitYX[0], fruitYX[1], ' ');
             wrefresh(win);
             fruitCor();
         }
-        usleep(100000);
+
+        usleep(100000); //make the loop wait for some time
         checkBor();
-        box (win, 0, 0);
+        box (win, 0, 0); // fixing the borders
 
     }
 
-    getch();
-    endwin();
+    endwin(); //
 
     return 0;
 }
