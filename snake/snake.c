@@ -66,8 +66,8 @@ void checkBor(void) {
 }
 
 void fruitCor(void) {
-    fruitYX[0] = (rand() %20);
-    fruitYX[1] = (rand() %20);
+    fruitYX[0] = (rand() %height);
+    fruitYX[1] = (rand() %width);
 }
 
 int main () {
