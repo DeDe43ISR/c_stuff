@@ -42,20 +42,26 @@ void setScreen (void) {
     startY = yMax/4;
     startX = xMax/4;
 
+    if ((height % 2) != 0)
+        height--;
+
+    if ((width % 2) != 0)
+        width--;
+
 }
 void checkBor(void) {
     
-    if (snakeYX[0][0] == (height))
-        snakeYX[0][0] = 0;
+    if (snakeYX[0][0] == (height - 1))
+        snakeYX[0][0] = 1;
 
     else if (snakeYX[0][0] == 0)
-        snakeYX[0][0] = (height);
+        snakeYX[0][0] = (height - 1);
 
-    else if (snakeYX[1][0] == (width))
-        snakeYX[1][0] = 0;
+    else if (snakeYX[1][0] == (width - 3))
+        snakeYX[1][0] = 1;
 
     else if (snakeYX[1][0] == 0)
-        snakeYX[1][0] = (width);
+        snakeYX[1][0] = (width - 3);
 
 }
 
@@ -98,6 +104,7 @@ int main () {
         moveSnake();
         mvwaddch(win, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
         mvwaddch(win, snakeYX[0][0], snakeYX[1][0], '*');
+//        mvwprintw(win, snakeYX[0][0], snakeYX[1][0], "%d", snakeYX[1][0]);
         mvwaddch(win, fruitYX[0], fruitYX[1], '@');
         wrefresh(win);
 
@@ -110,6 +117,7 @@ int main () {
         usleep(100000);
         checkBor();
         box (win, 0, 0);
+        mvwprintw(win, 15, 10, "%d", width);
 
     }
 
