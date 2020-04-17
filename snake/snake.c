@@ -8,7 +8,7 @@ int snakeYX[2][20];
 int fruitYX[2] = {9, 17};
 int input = 0;
 int keepMove;
-int yMax, xMax;
+int yMax, xMax, height, width, startY, startX;
 
 void moveSnake(void) {
 
@@ -35,19 +35,27 @@ void moveSnake(void) {
     }
 }
 
+void setScreen (void) {
+    getmaxyx(stdscr, yMax, xMax);
+    height = yMax/2;
+    width = xMax/2;
+    startY = yMax/4;
+    startX = xMax/4;
+
+}
 void checkBor(void) {
     
-    if (snakeYX[0][0] == (yMax/2))
+    if (snakeYX[0][0] == (height))
         snakeYX[0][0] = 0;
 
     else if (snakeYX[0][0] == 0)
-        snakeYX[0][0] = (yMax/2);
+        snakeYX[0][0] = (height);
 
-    else if (snakeYX[1][0] == (xMax/2))
+    else if (snakeYX[1][0] == (width))
         snakeYX[1][0] = 0;
 
     else if (snakeYX[1][0] == 0)
-        snakeYX[1][0] = (xMax/2);
+        snakeYX[1][0] = (width);
 
 }
 
@@ -65,8 +73,8 @@ int main () {
     initscr();
     noecho();
     cbreak();
-    getmaxyx(stdscr, yMax, xMax);
-    WINDOW * win = newwin(yMax/2, xMax/2, yMax/4, xMax/4);
+    setScreen();
+    WINDOW * win = newwin(height, width, startY, startX);
     refresh();
     box (win, 0, 0);
 
