@@ -3,14 +3,19 @@
 #include <unistd.h>
 
 int snakeLenght = 4;
-//int snakeYX[0] = 4, snakeYX[1] = 4;
 int gameOver = 0;
 int snakeYX[2][20];
 int fruitYX[2] = {9, 17};
 int input = 0;
 int keepMove;
+int yMax, xMax;
 
 void moveSnake(void) {
+
+    for (int i = snakeLenght; i > 0; i--) {
+        snakeYX[0][i] = snakeYX[0][i-1];
+        snakeYX[1][i] = snakeYX[1][i-1];
+    }
 
     if (input != ERR) {
         keepMove = input;
@@ -30,51 +35,65 @@ void moveSnake(void) {
     }
 }
 
+void checkBor(void) {
+    
+    if (snakeYX[0][0] == (yMax/2))
+        snakeYX[0][0] = 0;
+
+    else if (snakeYX[0][0] == 0)
+        snakeYX[0][0] = (yMax/2);
+
+    else if (snakeYX[1][0] == (xMax/2))
+        snakeYX[1][0] = 0;
+
+    else if (snakeYX[1][0] == 0)
+        snakeYX[1][0] = (xMax/2);
+
+}
+
 void fruitCor(void) {
     fruitYX[0] = (rand() %20);
     fruitYX[1] = (rand() %20);
 }
+
 int main () {
 
-    snakeYX[1][0] = 4;
-    snakeYX[0][0] = 4;
+    //snake starting point
+    snakeYX[1][0] = 20;
+    snakeYX[0][0] = 8;
 
-    for (int i = 0; i <= snakeLenght; i++) {
-        snakeYX[1][i] = (snakeLenght - i);
-    }
     initscr();
     noecho();
     cbreak();
-    keypad(stdscr, TRUE);
-    nodelay(stdscr, TRUE);
-    scrollok(stdscr, TRUE);
+    getmaxyx(stdscr, yMax, xMax);
+    WINDOW * win = newwin(yMax/2, xMax/2, yMax/4, xMax/4);
+    refresh();
+    box (win, 0, 0);
+
+    keypad(win, TRUE);
+    nodelay(win, TRUE);
+    scrollok(win, TRUE);
     keepMove = KEY_RIGHT;
 
     while (!gameOver) {
-        input = getch();
+        input = wgetch(win);
 
-        refresh();
-        for (int i = snakeLenght; i > 0; i--) {
-            snakeYX[0][i] = snakeYX[0][i-1];
-            snakeYX[1][i] = snakeYX[1][i-1];
-        }
 
         moveSnake();
-        mvwaddch(stdscr, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
-        mvwaddch(stdscr, snakeYX[0][0], snakeYX[1][0], '*');
-        mvwaddch(stdscr, fruitYX[0], fruitYX[1], '@');
-        refresh();
+        mvwaddch(win, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
+        mvwaddch(win, snakeYX[0][0], snakeYX[1][0], '*');
+        mvwaddch(win, fruitYX[0], fruitYX[1], '@');
+        wrefresh(win);
 
         if (snakeYX[0][0] == fruitYX[0] && snakeYX[1][0] == fruitYX[1]) {
             snakeLenght++;
-            mvwaddch(stdscr, fruitYX[0], fruitYX[1], ' ');
-            refresh();
+            mvwaddch(win, fruitYX[0], fruitYX[1], ' ');
+            wrefresh(win);
             fruitCor();
         }
         usleep(100000);
-
-        int i = 0;
-        i++;
+        checkBor();
+        box (win, 0, 0);
 
     }
 
