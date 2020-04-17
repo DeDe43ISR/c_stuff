@@ -57,11 +57,11 @@ void checkBor(void) {
     else if (snakeYX[0][0] == 0)
         snakeYX[0][0] = (height - 1);
 
-    else if (snakeYX[1][0] == (width - 3))
+    else if (snakeYX[1][0] >= (width - 1))
         snakeYX[1][0] = 1;
 
     else if (snakeYX[1][0] == 0)
-        snakeYX[1][0] = (width - 3);
+        snakeYX[1][0] = (width - 1);
 
 }
 
