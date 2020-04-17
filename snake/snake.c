@@ -117,7 +117,6 @@ int main () {
         usleep(100000);
         checkBor();
         box (win, 0, 0);
-        mvwprintw(win, 15, 10, "%d", width);
 
     }
 
