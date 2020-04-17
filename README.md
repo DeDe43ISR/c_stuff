@@ -1,6 +1,8 @@
 # c_stuff
 to run the snake game :
 
-'''cd snake
+```bash
+cd snake
 make
-./snake'''
+./snake
+```
