@@ -75,6 +75,34 @@ void fruitCor(void) {
     fruitYX[1] = (rand() %width);
 }
 
+void menu(void) {
+    
+    char menuOption[2][10] = {"Start", "Difficulty"};
+    int highlight = 0;
+
+    //menu window initialization
+    setScreen();
+    WINDOW * menu = newwin(height, width, startY, startX);
+    refresh();
+    box (menu, 0, 0);
+    wrefresh(menu);
+
+
+    while (1) {
+        
+        for (int i = 0; i < 2; i++) {
+            if (i == highlight)
+                wattron(menu, A_REVERSE);
+
+            mvwprintw(menu, (height/2 + i), (width/2 - 12) ,menuOption[i]);
+            wattroff(menu, A_REVERSE);
+        }
+
+        wrefresh(menu);
+    }
+
+}
+
 int main () {
 
     //snake starting point and direction
@@ -88,6 +116,8 @@ int main () {
     cbreak();
     curs_set(0);
 
+    menu();
+
     //game window initialization
     setScreen();
     WINDOW * game = newwin(height, width, startY, startX);
@@ -95,17 +125,6 @@ int main () {
     box (game, 0, 0);
 
     keypad(game, TRUE);
-
-    //start the game only after the player pressed a key
-    mvwprintw(game, height/2, (width/2 - 12) ,"Press any key to start");
-    input = wgetch(game);
-        if (input != ERR ){
-            nodelay(game, TRUE);
-            //wrefresh(game);
-            werase(game);
-            box (game, 0, 0);
-            wrefresh(game);
-        }
 
     //score window initialization
     setScreen();
