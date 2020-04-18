@@ -61,4 +61,5 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
         }
     }
     wrefresh(difficultyMenuWin);
+    return 10000; //return default value to remove compiler warnings
 }
