@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 int snakeYX[2][20];
-int snakeLenght = 10;
+int snakeLenght = 1;
 int gameOver = 0;
 int fruitYX[2] = {9, 17};
 int playerScore = 0;
@@ -83,7 +83,7 @@ int play(int difficulty, int height, int width, int startY, int startX) {
     wrefresh(score);
 
     //prints first fruit
-    mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+    mvwaddch(game, fruitYX[0], fruitYX[1], '*');
 
     //making sure game will start on second run
     gameOver = 0;
@@ -106,7 +106,7 @@ int play(int difficulty, int height, int width, int startY, int startX) {
             mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
             mvwprintw(score, 2, 10, "%d", playerScore);
             fruitCor(fruitYX, height, width);
-            mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+            mvwaddch(game, fruitYX[0], fruitYX[1], '*');
             wrefresh(game);
             wrefresh(score);
         }

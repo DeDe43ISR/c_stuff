@@ -1,6 +1,7 @@
 #ifndef __FUNCTION_H_
 #define __FUNCTION_H_
 
+void Leaderboard(int height, int width, int startY, int startX);
 int difficultyMenu(int difficultyLvl, int height, int width, int startY, int startX);
 int play(int difficulty, int height, int width, int startY, int startX);
 void fruitCor(int* fruitY,int* fruitX, int height, int width);

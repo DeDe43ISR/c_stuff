@@ -9,7 +9,6 @@ int difficulty = 100000; //default is easy
 int highScore = 0, gameScore = 0;
 FILE *highScoreFile;
 
-void checkScore(int gameScore) {
 
     int allScore[5] = {0};
     int rating, tempScore;
@@ -131,14 +130,18 @@ void mainMenu(void) {
                 switch (highlight) {
                     case (0):
                         delwin(mainMenu);
-                        gameScore = play(difficulty, height, width, startY, startX);
-                        checkScore(gameScore);
+                        play(difficulty, height, width, startY, startX);
                         goto mainMenuInt;
                         break;
                         
                     case (1):
                         delwin(mainMenu);
                         difficulty = difficultyMenu(difficulty, height, width, startY, startX);
+                        goto mainMenuInt;
+                    
+                    case (2):
+                        delwin(mainMenu);
+                        Leaderboard(height, width, startY, startX);
                         goto mainMenuInt;
 
                     case (2):

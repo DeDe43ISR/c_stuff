@@ -63,3 +63,25 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
     wrefresh(difficultyMenuWin);
     return 10000; //return default value to remove compiler warnings
 }
+
+void Leaderboard(int height, int width, int startY, int startX) {
+    
+    FILE *scoreFile;
+    int printScore, input;
+
+    WINDOW * leaderboardWin = newwin(height, width, startY, startX);
+    refresh();
+    box(leaderboardWin, 0, 0);
+    wrefresh(leaderboardWin);
+
+    scoreFile = fopen("highScore.txt", "r");
+    if (scoreFile == NULL)
+        mvwprintw(leaderboardWin, height, width, "No High Score File..");
+
+    for(int i = 1;fscanf(scoreFile, "%d\n", &printScore) != EOF;i++) {
+        mvwprintw(leaderboardWin, (height/2 + i), (width/2), "%d : %d", i, printScore);
+    }
+    input = wgetch(leaderboardWin); //getting the key that was pressed
+
+}
+
