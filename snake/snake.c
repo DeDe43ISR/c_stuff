@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "menus.h"
 
 int snakeLenght = 10;
 int gameOver = 0;
@@ -145,67 +146,7 @@ void play(void) {
         delwin(score);
 
 }
-void difficultyMenu(void) {
-    
-    int onMenu = 1;
-    int highlight = 0;
-    char difficultyOption[3][10] = {"Easy", "Hard", "GG"};
 
-    WINDOW * difficultyMenu = newwin(height, width, startY, startX);
-    refresh();
-    box (difficultyMenu, 0, 0);
-    wrefresh(difficultyMenu);
-    keypad(difficultyMenu, TRUE);
-    while (onMenu) {
-
-        for (int i = 0; i < 3; i++) {
-            if (i == highlight)
-                wattron(difficultyMenu, A_REVERSE);
-
-            mvwprintw(difficultyMenu, (height/2 + i), (width/2 - 12) ,difficultyOption[i]);
-            wattroff(difficultyMenu, A_REVERSE);
-        }
-        wrefresh(difficultyMenu);
-
-        input = wgetch(difficultyMenu); //getting the key that was pressed
-
-        switch (input) {
-            case (KEY_UP):
-                highlight--;
-                if (highlight == -1)
-                    highlight = 2;
-                break;
-
-            case (KEY_DOWN):
-                highlight++;
-                if (highlight == 3)
-                    highlight = 0;
-                break;
-            
-            case (10):
-                switch (highlight) {
-                    case (0):
-                        difficulty = 100000;
-                        delwin(difficultyMenu);
-                        onMenu = 0;
-                        break;
-                        
-                    case (1):
-                        difficulty = 10000;
-                        delwin(difficultyMenu);
-                        onMenu = 0;
-                        break;
-
-                    case (2):
-                        difficulty = 1000;
-                        delwin(difficultyMenu);
-                        onMenu = 0;
-                        break;
-            }
-        }
-    }
-    wrefresh(difficultyMenu);
-}
 void mainMenu(void) {
     
     char mainMenuOption[3][11] = {"Start", "Difficulty", "Exit"};
@@ -257,7 +198,7 @@ void mainMenu(void) {
                         
                     case (1):
                         delwin(mainMenu);
-                        difficultyMenu();
+                        difficulty = difficultyMenu(difficulty, height, width, startY, startX);
                         goto mainMenuInt;
 
                     case (2):
