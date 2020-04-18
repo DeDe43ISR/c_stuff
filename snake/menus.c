@@ -66,65 +66,22 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
 
 void Leaderboard(int height, int width, int startY, int startX) {
     
-    int scorevariable;
-    int oonMenu = 1;
-    int inputa;
-    int hhighlight = 0;
-    char Score[3][10] = {"whatever", "asd", "asdasd"};
+    FILE *scoreFile;
+    int printScore, input;
 
-    WINDOW * LeaderboardWin = newwin(height, width, startY, startX);
+    WINDOW * leaderboardWin = newwin(height, width, startY, startX);
     refresh();
-    box (LeaderboardWin, 0, 0);
-    wrefresh(LeaderboardWin);
-    keypad(LeaderboardWin, TRUE);
-    while (oonMenu) {
+    box(leaderboardWin, 0, 0);
+    wrefresh(leaderboardWin);
 
-        for (int i = 0; i < 3; i++) {
-            if (i == hhighlight)
-                wattron(LeaderboardWin, A_REVERSE);
+    scoreFile = fopen("highScore.txt", "r");
+    if (scoreFile == NULL)
+        mvwprintw(leaderboardWin, height, width, "No High Score File..");
 
-            mvwprintw(LeaderboardWin, (height/2 + i), (width/2 - 12) ,Score[i]);
-            wattroff(LeaderboardWin, A_REVERSE);
-        }
-        wrefresh(LeaderboardWin);
-
-        inputa = wgetch(LeaderboardWin); //getting the key that was pressed
-
-        switch (inputa) {
-            case (KEY_UP):
-                hhighlight--;
-                if (hhighlight == -1)
-                    hhighlight = 2;
-                break;
-
-            case (KEY_DOWN):
-                hhighlight++;
-                if (hhighlight == 3)
-                    hhighlight = 0;
-                break;
-
-            case (10):
-                switch (hhighlight) {
-                    case (0):
-//                        return 100000;
-                        delwin(LeaderboardWin);
-                        oonMenu = 0;
-                        break;
-
-                    case (1):
-//                        return 10000;
-                        delwin(LeaderboardWin);
-                        oonMenu = 0;
-                        break;
-
-                    case (2):
-//                        return 1000;
-                        delwin(LeaderboardWin);
-                        oonMenu = 0;
-                        break;
-            }
-        }
+    for(int i = 1;fscanf(scoreFile, "%d\n", &printScore) != EOF;i++) {
+        mvwprintw(leaderboardWin, (height/2 + i), (width/2), "%d : %d", i, printScore);
     }
-    wrefresh(LeaderboardWin);
+    input = wgetch(leaderboardWin); //getting the key that was pressed
+
 }
 
