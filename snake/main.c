@@ -6,8 +6,8 @@
 int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;
 int difficulty = 100000; //default is easy
-
-
+//int Scoreboard;
+//int score;
 //setting the game window according to the terminal
 void setScreen (void) {
     getmaxyx(stdscr, yMax, xMax);
@@ -26,7 +26,7 @@ void setScreen (void) {
 
 void mainMenu(void) {
     
-    char mainMenuOption[3][11] = {"Start", "Difficulty", "Exit"};
+    char mainMenuOption[4][15] = {"Start", "Difficulty", "Leaderboard", "Exit"};
     int highlight = 0;
     int onMenu = 1;
 
@@ -41,7 +41,7 @@ void mainMenu(void) {
 
     while (onMenu) {
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             if (i == highlight)
                 wattron(mainMenu, A_REVERSE);
 
@@ -58,10 +58,10 @@ void mainMenu(void) {
                 if (highlight == -1)
                     highlight = 2;
                 break;
-
+ 
             case (KEY_DOWN):
                 highlight++;
-                if (highlight == 3)
+                if (highlight == 4)
                     highlight = 0;
                 break;
             
@@ -77,8 +77,13 @@ void mainMenu(void) {
                         delwin(mainMenu);
                         difficulty = difficultyMenu(difficulty, height, width, startY, startX);
                         goto mainMenuInt;
-
+                    
                     case (2):
+                        delwin(mainMenu);
+                        Leaderboard(height, width, startY, startX);
+                        goto mainMenuInt;
+
+                    case (3):
                         delwin(mainMenu);
                         onMenu = 0;
                         refresh();
