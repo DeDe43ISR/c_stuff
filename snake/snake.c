@@ -79,6 +79,7 @@ void menu(void) {
     
     char menuOption[2][10] = {"Start", "Difficulty"};
     int highlight = 0;
+    int onMenu = 1;
 
     //menu window initialization
     setScreen();
@@ -88,7 +89,7 @@ void menu(void) {
     wrefresh(menu);
     keypad(menu, TRUE);
 
-    while (1) {
+    while (onMenu) {
 
 
         for (int i = 0; i < 2; i++) {
@@ -114,8 +115,15 @@ void menu(void) {
                 if (highlight == 2)
                     highlight = 0;
                 break;
+            
+            case (10):
+                switch (highlight) {
+                    case (0):
+                        delwin(menu);
+                        onMenu = 0;
+                        break;
+                }
         }
-
         wrefresh(menu);
     }
 
@@ -141,8 +149,8 @@ int main () {
     WINDOW * game = newwin(height, width, startY, startX);
     refresh();
     box (game, 0, 0);
-
     keypad(game, TRUE);
+    nodelay(game, TRUE);
 
     //score window initialization
     setScreen();
