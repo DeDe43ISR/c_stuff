@@ -86,16 +86,34 @@ void menu(void) {
     refresh();
     box (menu, 0, 0);
     wrefresh(menu);
-
+    keypad(menu, TRUE);
 
     while (1) {
-        
+
+
         for (int i = 0; i < 2; i++) {
             if (i == highlight)
                 wattron(menu, A_REVERSE);
 
             mvwprintw(menu, (height/2 + i), (width/2 - 12) ,menuOption[i]);
             wattroff(menu, A_REVERSE);
+        }
+        wrefresh(menu);
+
+        input = wgetch(menu); //getting the key that was pressed
+
+        switch (input) {
+            case (KEY_UP):
+                highlight--;
+                if (highlight == -1)
+                    highlight = 1;
+                break;
+
+            case (KEY_DOWN):
+                highlight++;
+                if (highlight == 2)
+                    highlight = 0;
+                break;
         }
 
         wrefresh(menu);
