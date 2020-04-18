@@ -10,6 +10,7 @@ int playerScore = 0;
 int input = 0;
 int keepMove;
 int yMax, xMax, height, width, startY, startX;
+int difficulty = 100000;
 
 //move the snake according to the keys that are being pressed
 void moveSnake(void) {
@@ -75,6 +76,67 @@ void fruitCor(void) {
     fruitYX[1] = (rand() % (width - 2));
 }
 
+void difficultyMenu(void) {
+    
+    int onMenu = 1;
+    int highlight = 0;
+    char difficultyOption[3][10] = {"Easy", "Hard", "GG"};
+
+    WINDOW * difficultyMenu = newwin(height, width, startY, startX);
+    refresh();
+    box (difficultyMenu, 0, 0);
+    wrefresh(difficultyMenu);
+    keypad(difficultyMenu, TRUE);
+    while (onMenu) {
+
+        for (int i = 0; i < 3; i++) {
+            if (i == highlight)
+                wattron(difficultyMenu, A_REVERSE);
+
+            mvwprintw(difficultyMenu, (height/2 + i), (width/2 - 12) ,difficultyOption[i]);
+            wattroff(difficultyMenu, A_REVERSE);
+        }
+        wrefresh(difficultyMenu);
+
+        input = wgetch(difficultyMenu); //getting the key that was pressed
+
+        switch (input) {
+            case (KEY_UP):
+                highlight--;
+                if (highlight == -1)
+                    highlight = 2;
+                break;
+
+            case (KEY_DOWN):
+                highlight++;
+                if (highlight == 3)
+                    highlight = 0;
+                break;
+            
+            case (10):
+                switch (highlight) {
+                    case (0):
+                        difficulty = 100000;
+                        delwin(difficultyMenu);
+                        onMenu = 0;
+                        break;
+                        
+                    case (1):
+                        difficulty = 10000;
+                        delwin(difficultyMenu);
+                        onMenu = 0;
+                        break;
+
+                    case (2):
+                        difficulty = 1000;
+                        delwin(difficultyMenu);
+                        onMenu = 0;
+                        break;
+            }
+        }
+    }
+    wrefresh(difficultyMenu);
+}
 void menu(void) {
     
     char menuOption[2][10] = {"Start", "Difficulty"};
@@ -90,7 +152,6 @@ void menu(void) {
     keypad(menu, TRUE);
 
     while (onMenu) {
-
 
         for (int i = 0; i < 2; i++) {
             if (i == highlight)
@@ -122,9 +183,13 @@ void menu(void) {
                         delwin(menu);
                         onMenu = 0;
                         break;
+                        
+                    case (1):
+                        difficultyMenu();
+                        werase(menu);
+                        box(menu, 0, 0);
                 }
         }
-        wrefresh(menu);
     }
 
 }
@@ -186,7 +251,7 @@ int main () {
             wrefresh(score);
         }
 
-        usleep(100000); //make the loop wait for some time
+        usleep(difficulty); //make the loop wait for some time
         checkBor();
         box (game, 0, 0); // fixing the borders
 
@@ -196,4 +261,3 @@ int main () {
 
     return 0;
 }
-
