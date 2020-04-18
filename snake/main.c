@@ -6,6 +6,10 @@
 int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;
 int difficulty = 100000; //default is easy
+int highScore = 0;
+FILE *highScoreFile;
+
+
 
 
 //setting the game window according to the terminal
@@ -30,6 +34,13 @@ void mainMenu(void) {
     int highlight = 0;
     int onMenu = 1;
 
+    highScoreFile = fopen("highScore.txt","r");
+        if (highScoreFile == NULL)
+            goto mainMenuInt;
+
+    fscanf(highScoreFile,"1 : %d", &highScore);
+    fclose(highScoreFile);
+
     //mainMenu window initialization
     mainMenuInt:
     setScreen();
@@ -38,6 +49,14 @@ void mainMenu(void) {
     box (mainMenu, 0, 0);
     wrefresh(mainMenu);
     keypad(mainMenu, TRUE);
+    
+    //highScore window initialization
+    WINDOW * highScoreWin = newwin(5, (width/2), (startY - 5), (startX + (width/2)));
+    refresh();
+    box (highScoreWin, 0, 0);
+    mvwprintw(highScoreWin, 2 , 2, "Score : %d", highScore);
+    wrefresh(highScoreWin);
+
 
     while (onMenu) {
 
