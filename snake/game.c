@@ -13,7 +13,7 @@ int keepMove;
 //move the snake according to the keys that are being pressed
 void moveSnake(void) {
 
-    //moving the snake location in the arrey
+    //moving the snake location in the array
     for (int i = snakeLenght; i > 0; i--) {
         snakeYX[0][i] = snakeYX[0][i-1];
         snakeYX[1][i] = snakeYX[1][i-1];
