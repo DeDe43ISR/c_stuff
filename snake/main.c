@@ -9,7 +9,7 @@ int difficulty = 100000; //default is easy
 int highScore = 0, gameScore = 0;
 FILE *highScoreFile;
 
-
+void checkScore(int gameScore) {
     int allScore[5] = {0};
     int rating, tempScore;
     bool reWrite = false;
@@ -72,7 +72,7 @@ void setScreen (void) {
 
 void mainMenu(void) {
     
-    char mainMenuOption[3][11] = {"Start", "Difficulty", "Exit"};
+    char mainMenuOption[4][15] = {"Start", "Difficulty","Leaderboard", "Exit"};
     int highlight = 0;
     int onMenu = 1;
 
@@ -102,7 +102,7 @@ void mainMenu(void) {
 
     while (onMenu) {
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             if (i == highlight)
                 wattron(mainMenu, A_REVERSE);
 
@@ -117,12 +117,12 @@ void mainMenu(void) {
             case (KEY_UP):
                 highlight--;
                 if (highlight == -1)
-                    highlight = 2;
+                    highlight = 3;
                 break;
 
             case (KEY_DOWN):
                 highlight++;
-                if (highlight == 3)
+                if (highlight == 4)
                     highlight = 0;
                 break;
             
@@ -144,7 +144,7 @@ void mainMenu(void) {
                         Leaderboard(height, width, startY, startX);
                         goto mainMenuInt;
 
-                    case (2):
+                    case (3):
                         delwin(mainMenu);
                         onMenu = 0;
                         refresh();
