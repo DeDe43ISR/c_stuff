@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int snakeLenght = 1;
+int snakeLenght = 10;
 int gameOver = 0;
 int snakeYX[2][20];
 int fruitYX[2] = {9, 17};
@@ -76,6 +76,68 @@ void fruitCor(void) {
     fruitYX[1] = (rand() % (width - 2));
 }
 
+void play(void) {
+
+    //game window initialization
+    setScreen();
+    WINDOW * game = newwin(height, width, startY, startX);
+    refresh();
+    box (game, 0, 0);
+    keypad(game, TRUE);
+    nodelay(game, TRUE);
+
+    //score window initialization
+    setScreen();
+    WINDOW * score = newwin(5, (width/2), (startY - 5), startX);
+    refresh();
+    box (score, 0, 0);
+    mvwprintw(score, 2 , 2, "Score : %d", playerScore);
+    wrefresh(score);
+
+    mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+
+    while (!gameOver) {
+
+        input = wgetch(game); //getting the key that was pressed
+
+        moveSnake();
+
+        //print the snake and the fruit
+        mvwaddch(game, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
+        mvwaddch(game, snakeYX[0][0], snakeYX[1][0], '*');
+//        mvwprintw(game, snakeYX[0][0], snakeYX[1][0], "%d", snakeYX[1][0]);
+        wrefresh(game);
+
+        //increase the snake size if a fruit was eaten
+        if (snakeYX[0][0] == fruitYX[0] && snakeYX[1][0] == fruitYX[1]) {
+            snakeLenght++;
+            playerScore++;
+            mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
+            mvwprintw(score, 2, 10, "%d", playerScore);
+            fruitCor();
+            mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+            wrefresh(game);
+            wrefresh(score);
+        }
+
+        for (int i = 1; i < snakeLenght; i++) {
+            if (snakeYX[0][0] == snakeYX[0][i] && snakeYX[1][0] == snakeYX[1][i]) {
+                gameOver = 1;
+                werase(game);
+                wrefresh(game);
+//                delwin(game);
+                break;
+            }
+                
+        }
+
+        usleep(difficulty); //make the loop wait for some time
+        checkBor();
+        box (game, 0, 0); // fixing the borders
+
+    }
+
+}
 void difficultyMenu(void) {
     
     int onMenu = 1;
@@ -137,32 +199,32 @@ void difficultyMenu(void) {
     }
     wrefresh(difficultyMenu);
 }
-void menu(void) {
+void mainMenu(void) {
     
-    char menuOption[2][10] = {"Start", "Difficulty"};
+    char mainMenuOption[2][10] = {"Start", "Difficulty"};
     int highlight = 0;
     int onMenu = 1;
 
-    //menu window initialization
+    //mainMenu window initialization
     setScreen();
-    WINDOW * menu = newwin(height, width, startY, startX);
+    WINDOW * mainMenu = newwin(height, width, startY, startX);
     refresh();
-    box (menu, 0, 0);
-    wrefresh(menu);
-    keypad(menu, TRUE);
+    box (mainMenu, 0, 0);
+    wrefresh(mainMenu);
+    keypad(mainMenu, TRUE);
 
     while (onMenu) {
 
         for (int i = 0; i < 2; i++) {
             if (i == highlight)
-                wattron(menu, A_REVERSE);
+                wattron(mainMenu, A_REVERSE);
 
-            mvwprintw(menu, (height/2 + i), (width/2 - 12) ,menuOption[i]);
-            wattroff(menu, A_REVERSE);
+            mvwprintw(mainMenu, (height/2 + i), (width/2 - 12) ,mainMenuOption[i]);
+            wattroff(mainMenu, A_REVERSE);
         }
-        wrefresh(menu);
+        wrefresh(mainMenu);
 
-        input = wgetch(menu); //getting the key that was pressed
+        input = wgetch(mainMenu); //getting the key that was pressed
 
         switch (input) {
             case (KEY_UP):
@@ -180,19 +242,22 @@ void menu(void) {
             case (10):
                 switch (highlight) {
                     case (0):
-                        delwin(menu);
-                        onMenu = 0;
+                        //delwin(mainMenu);
+                        play();
+                        box (mainMenu, 0, 0);
+                        wrefresh(mainMenu);
                         break;
                         
                     case (1):
                         difficultyMenu();
-                        werase(menu);
-                        box(menu, 0, 0);
+                        werase(mainMenu);
+                        box(mainMenu, 0, 0);
                 }
         }
     }
 
 }
+
 
 int main () {
 
@@ -207,55 +272,7 @@ int main () {
     cbreak();
     curs_set(0);
 
-    menu();
-
-    //game window initialization
-    setScreen();
-    WINDOW * game = newwin(height, width, startY, startX);
-    refresh();
-    box (game, 0, 0);
-    keypad(game, TRUE);
-    nodelay(game, TRUE);
-
-    //score window initialization
-    setScreen();
-    WINDOW * score = newwin(5, (width/2), (startY - 5), startX);
-    refresh();
-    box (score, 0, 0);
-    mvwprintw(score, 2 , 2, "Score : %d", playerScore);
-    wrefresh(score);
-
-    mvwaddch(game, fruitYX[0], fruitYX[1], '@');
-
-    while (!gameOver) {
-
-        input = wgetch(game); //getting the key that was pressed
-
-        moveSnake();
-
-        //print the snake and the fruit
-        mvwaddch(game, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
-        mvwaddch(game, snakeYX[0][0], snakeYX[1][0], '*');
-//        mvwprintw(game, snakeYX[0][0], snakeYX[1][0], "%d", snakeYX[1][0]);
-        wrefresh(game);
-
-        //increase the snake size if a fruit was eaten
-        if (snakeYX[0][0] == fruitYX[0] && snakeYX[1][0] == fruitYX[1]) {
-            snakeLenght++;
-            playerScore++;
-            mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
-            mvwprintw(score, 2, 10, "%d", playerScore);
-            fruitCor();
-            mvwaddch(game, fruitYX[0], fruitYX[1], '@');
-            wrefresh(game);
-            wrefresh(score);
-        }
-
-        usleep(difficulty); //make the loop wait for some time
-        checkBor();
-        box (game, 0, 0); // fixing the borders
-
-    }
+    mainMenu();
 
     endwin(); //
 
