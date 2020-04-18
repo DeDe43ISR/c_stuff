@@ -10,7 +10,7 @@ int playerScore = 0;
 int input = 0;
 int keepMove;
 int yMax, xMax, height, width, startY, startX;
-int difficulty = 100000;
+int difficulty = 100000; //default is easy
 
 //move the snake according to the keys that are being pressed
 void moveSnake(void) {
@@ -99,8 +99,10 @@ void play(void) {
     mvwprintw(score, 2 , 2, "Score : %d", playerScore);
     wrefresh(score);
 
+    //prints first fruit
     mvwaddch(game, fruitYX[0], fruitYX[1], '@');
 
+    //making sure game will start on second run
     gameOver = 0;
 
     while (!gameOver) {
