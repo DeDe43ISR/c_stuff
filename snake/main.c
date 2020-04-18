@@ -75,7 +75,7 @@ void mainMenu(void) {
     
     char mainMenuOption[4][15] = {"Start", "Difficulty","Leaderboard", "Exit"};
     int highlight = 0;
-    size_t numberOfElements = sizeof(mainMenuOption)/sizeof(mainMenuOption[0]);  // number of elements in mainMenuoPtion array 
+    size_t mainMenuLen = sizeof(mainMenuOption)/sizeof(mainMenuOption[0]);  // number of elements in mainMenuoPtion array 
     int onMenu = 1;
 
     highScoreFile = fopen("highScore.txt","r");
@@ -104,7 +104,7 @@ void mainMenu(void) {
 
     while (onMenu) {
 
-        for (int i = 0; i < numberOfElements; i++) {
+        for (int i = 0; i < mainMenuLen; i++) {
             if (i == highlight)
                 wattron(mainMenu, A_REVERSE);
 
@@ -119,12 +119,12 @@ void mainMenu(void) {
             case (KEY_UP):
                 highlight--;
                 if (highlight == -1)
-                    highlight = (numberOfElements-1);
+                    highlight = (mainMenuLen - 1);
                 break;
 
             case (KEY_DOWN):
                 highlight++;
-                if (highlight == numberOfElements)
+                if (highlight == mainMenuLen)
                     highlight = 0;
                 break;
             

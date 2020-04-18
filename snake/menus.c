@@ -6,6 +6,7 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
     int input;
     int highlight = 0;
     char difficultyOption[3][10] = {"Easy", "Hard", "GG"};
+    size_t difficultyMenuLen = sizeof(difficultyOption)/sizeof(difficultyOption[0]);
 
     WINDOW * difficultyMenuWin = newwin(height, width, startY, startX);
     refresh();
@@ -14,7 +15,7 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
     keypad(difficultyMenuWin, TRUE);
     while (onMenu) {
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < difficultyMenuLen; i++) {
             if (i == highlight)
                 wattron(difficultyMenuWin, A_REVERSE);
 
@@ -29,12 +30,13 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
             case (KEY_UP):
                 highlight--;
                 if (highlight == -1)
-                    highlight = 2;
+                        // do we need size_of here ?
+                    highlight = (difficultyMenuLen - 1);
                 break;
 
             case (KEY_DOWN):
                 highlight++;
-                if (highlight == 3)
+                if (highlight == difficultyMenuLen)
                     highlight = 0;
                 break;
             
