@@ -130,7 +130,8 @@ void mainMenu(void) {
                 switch (highlight) {
                     case (0):
                         delwin(mainMenu);
-                        play(difficulty, height, width, startY, startX);
+                        gameScore = play(difficulty, height, width, startY, startX);
+                        checkScore(gameScore);
                         goto mainMenuInt;
                         break;
                         
