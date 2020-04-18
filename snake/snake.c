@@ -78,6 +78,11 @@ void fruitCor(void) {
 
 void play(void) {
 
+    //snake starting point and direction
+    snakeYX[1][0] = 20;
+    snakeYX[0][0] = 8;
+    keepMove = KEY_RIGHT;
+
     //game window initialization
     setScreen();
     WINDOW * game = newwin(height, width, startY, startX);
@@ -95,6 +100,8 @@ void play(void) {
     wrefresh(score);
 
     mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+
+    gameOver = 0;
 
     while (!gameOver) {
 
@@ -123,9 +130,7 @@ void play(void) {
         for (int i = 1; i < snakeLenght; i++) {
             if (snakeYX[0][0] == snakeYX[0][i] && snakeYX[1][0] == snakeYX[1][i]) {
                 gameOver = 1;
-                werase(game);
-                wrefresh(game);
-//                delwin(game);
+                playerScore = 0;
                 break;
             }
                 
@@ -136,6 +141,8 @@ void play(void) {
         box (game, 0, 0); // fixing the borders
 
     }
+        delwin(game);
+        delwin(score);
 
 }
 void difficultyMenu(void) {
@@ -201,11 +208,12 @@ void difficultyMenu(void) {
 }
 void mainMenu(void) {
     
-    char mainMenuOption[2][10] = {"Start", "Difficulty"};
+    char mainMenuOption[3][11] = {"Start", "Difficulty", "Exit"};
     int highlight = 0;
     int onMenu = 1;
 
     //mainMenu window initialization
+    mainMenuInt:
     setScreen();
     WINDOW * mainMenu = newwin(height, width, startY, startX);
     refresh();
@@ -215,7 +223,7 @@ void mainMenu(void) {
 
     while (onMenu) {
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             if (i == highlight)
                 wattron(mainMenu, A_REVERSE);
 
@@ -230,41 +238,43 @@ void mainMenu(void) {
             case (KEY_UP):
                 highlight--;
                 if (highlight == -1)
-                    highlight = 1;
+                    highlight = 2;
                 break;
 
             case (KEY_DOWN):
                 highlight++;
-                if (highlight == 2)
+                if (highlight == 3)
                     highlight = 0;
                 break;
             
             case (10):
                 switch (highlight) {
                     case (0):
-                        //delwin(mainMenu);
+                        delwin(mainMenu);
                         play();
-                        box (mainMenu, 0, 0);
-                        wrefresh(mainMenu);
+                        goto mainMenuInt;
                         break;
                         
                     case (1):
                         difficultyMenu();
                         werase(mainMenu);
                         box(mainMenu, 0, 0);
+
+                    case (2):
+                        delwin(mainMenu);
+                        onMenu = 0;
+                        refresh();
+                        endwin();
+                        break;
                 }
         }
+
     }
 
 }
 
 
 int main () {
-
-    //snake starting point and direction
-    snakeYX[1][0] = 20;
-    snakeYX[0][0] = 8;
-    keepMove = KEY_RIGHT;
 
     //ncurses initialization
     initscr();
@@ -274,7 +284,7 @@ int main () {
 
     mainMenu();
 
-    endwin(); //
+    endwin();
 
     return 0;
 }
