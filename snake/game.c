@@ -96,7 +96,6 @@ void play(int difficulty, int height, int width, int startY, int startX) {
         //print the snake and the fruit
         mvwaddch(game, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
         mvwaddch(game, snakeYX[0][0], snakeYX[1][0], '*');
-//        mvwprintw(game, snakeYX[0][0], snakeYX[1][0], "%d", snakeYX[1][0]);
         wrefresh(game);
 
         //increase the snake size if a fruit was eaten
