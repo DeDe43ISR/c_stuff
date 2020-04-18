@@ -1,8 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "menus.h"
-#include "game.h"
+#include "function.h"
 
 int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;

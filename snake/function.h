@@ -1,6 +1,7 @@
-#ifndef __GAME_H_
-#define __GAME_H_
+#ifndef __FUNCTION_H_
+#define __FUNCTION_H_
 
+int difficultyMenu(int difficultyLvl, int height, int width, int startY, int startX);
 void play(int difficulty, int height, int width, int startY, int startX);
 void fruitCor(int* fruitY,int* fruitX, int height, int width);
 void checkBor(void);
