@@ -7,6 +7,7 @@ int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;
 int difficulty = 100000; //default is easy
 int highScore = 0, gameScore = 0;
+int err = 0;
 FILE *highScoreFile;
 
 void checkScore(int gameScore) {
@@ -142,7 +143,7 @@ void mainMenu(void) {
                     
                     case (2):
                         delwin(mainMenu);
-                        Leaderboard(height, width, startY, startX);
+                        err = Leaderboard(height, width, startY, startX);
                         goto mainMenuInt;
 
                     case (3):
