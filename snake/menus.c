@@ -126,6 +126,5 @@ void Leaderboard(int height, int width, int startY, int startX) {
         }
     }
     wrefresh(LeaderboardWin);
-    return 0; //return default value to remove compiler warnings
 }
 
