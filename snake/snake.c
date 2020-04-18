@@ -84,7 +84,6 @@ void play(void) {
     keepMove = KEY_RIGHT;
 
     //game window initialization
-    setScreen();
     WINDOW * game = newwin(height, width, startY, startX);
     refresh();
     box (game, 0, 0);
@@ -92,7 +91,6 @@ void play(void) {
     nodelay(game, TRUE);
 
     //score window initialization
-    setScreen();
     WINDOW * score = newwin(5, (width/2), (startY - 5), startX);
     refresh();
     box (score, 0, 0);
