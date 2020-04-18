@@ -6,12 +6,55 @@
 int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;
 int difficulty = 100000; //default is easy
-int highScore = 0;
+int highScore = 0, gameScore = 0;
 FILE *highScoreFile;
 
+void checkScore(int gameScore) {
 
+    int allScore[5] = {0};
+    int rating, tempScore;
+    bool reWrite = false;
 
+    //open highScore.txt file and create one if doesn't exist with current score has highest
+    highScoreFile = fopen("highScore.txt","r");
+    if (highScoreFile == NULL) {
+        highScoreFile = fopen("highScore.txt","w");
+        fprintf(highScoreFile, "%d", gameScore);
+        fclose(highScoreFile);
+    }
 
+    //save all scores to array
+    highScoreFile = fopen("highScore.txt","r");
+    for (int i = 0; i < 5; i++)
+        fscanf(highScoreFile, "%d", &allScore[i]);
+
+    //check if current score is higher and re-write the file if he does
+    fclose(highScoreFile);
+    for (int i = 0; i < 5; i++) {
+        if (gameScore > allScore[i]) {
+            reWrite = TRUE;
+            rating = i;
+            while (i < 4) {
+                tempScore = allScore[i+1];
+                allScore[i+1] = allScore[i];
+                allScore[i+2] = tempScore;
+                i++;
+            }
+            allScore[rating] = gameScore;
+        }
+    }
+    if (reWrite == TRUE) {
+        highScoreFile = fopen("highScore.txt","w");
+
+        for (int i = 0; i < 5; i++)
+            fprintf(highScoreFile, "%d\n", allScore[i]);
+
+        fclose(highScoreFile);
+    }
+    if (gameScore > highScore) {
+        highScore = gameScore;
+    }
+}
 //setting the game window according to the terminal
 void setScreen (void) {
     getmaxyx(stdscr, yMax, xMax);
@@ -38,7 +81,7 @@ void mainMenu(void) {
         if (highScoreFile == NULL)
             goto mainMenuInt;
 
-    fscanf(highScoreFile,"1 : %d", &highScore);
+    fscanf(highScoreFile,"%d", &highScore);
     fclose(highScoreFile);
 
     //mainMenu window initialization
@@ -54,7 +97,7 @@ void mainMenu(void) {
     WINDOW * highScoreWin = newwin(5, (width/2), (startY - 5), (startX + (width/2)));
     refresh();
     box (highScoreWin, 0, 0);
-    mvwprintw(highScoreWin, 2 , 2, "Score : %d", highScore);
+    mvwprintw(highScoreWin, 2 , 2, "High Score : %d", highScore);
     wrefresh(highScoreWin);
 
 
@@ -88,7 +131,8 @@ void mainMenu(void) {
                 switch (highlight) {
                     case (0):
                         delwin(mainMenu);
-                        play(difficulty, height, width, startY, startX);
+                        gameScore = play(difficulty, height, width, startY, startX);
+                        checkScore(gameScore);
                         goto mainMenuInt;
                         break;
                         

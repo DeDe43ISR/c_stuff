@@ -60,12 +60,13 @@ void fruitCor(int fruitYX[], int height, int width) {
     fruitYX[1] = (rand() % (width - 2));
 }
 
-void play(int difficulty, int height, int width, int startY, int startX) {
+int play(int difficulty, int height, int width, int startY, int startX) {
 
     //snake starting point and direction
     snakeYX[1][0] = 20;
     snakeYX[0][0] = 8;
     keepMove = KEY_RIGHT;
+    playerScore = 0;
 
     //game window initialization
     WINDOW * game = newwin(height, width, startY, startX);
@@ -113,7 +114,6 @@ void play(int difficulty, int height, int width, int startY, int startX) {
         for (int i = 1; i < snakeLenght; i++) {
             if (snakeYX[0][0] == snakeYX[0][i] && snakeYX[1][0] == snakeYX[1][i]) {
                 gameOver = 1;
-                playerScore = 0;
                 break;
             }
                 
@@ -124,7 +124,8 @@ void play(int difficulty, int height, int width, int startY, int startX) {
         box (game, 0, 0); // fixing the borders
 
     }
-        delwin(game);
-        delwin(score);
+    delwin(game);
+    delwin(score);
+    return playerScore;
 
 }
