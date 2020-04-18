@@ -258,9 +258,9 @@ void mainMenu(void) {
                         break;
                         
                     case (1):
+                        delwin(mainMenu);
                         difficultyMenu();
-                        werase(mainMenu);
-                        box(mainMenu, 0, 0);
+                        goto mainMenuInt;
 
                     case (2):
                         delwin(mainMenu);
