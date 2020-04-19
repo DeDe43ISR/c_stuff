@@ -2,6 +2,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+#define FRUIT_COLOR 1
+#define BLACK_COLOR 2
+#define TAIL_COLOR 3
+#define HEAD_COLOR 4
+
 int snakeYX[2][20];
 int snakeLenght = 10;
 int gameOver = 0;
@@ -82,8 +87,17 @@ int play(int difficulty, int height, int width, int startY, int startX) {
     mvwprintw(score, 2 , 2, "Score : %d", playerScore);
     wrefresh(score);
 
+    start_color();
+    init_pair(FRUIT_COLOR, COLOR_RED, COLOR_RED);
+    init_pair(BLACK_COLOR, COLOR_BLACK, COLOR_BLACK);
+    init_pair(TAIL_COLOR, COLOR_GREEN, COLOR_GREEN);
+    init_pair(HEAD_COLOR, COLOR_BLUE, COLOR_BLUE);
+
     //prints first fruit
-    mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+    wattron(game, COLOR_PAIR(FRUIT_COLOR));
+    mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
+    wattroff(game, COLOR_PAIR(FRUIT_COLOR));
+    wrefresh(game);
 
     //making sure game will start on second run
     gameOver = 0;
@@ -96,18 +110,35 @@ int play(int difficulty, int height, int width, int startY, int startX) {
 
         //print the snake and the fruit
         mvwaddch(game, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
-        mvwaddch(game, snakeYX[0][0], snakeYX[1][0], '*');
+        
+        wattron(game, COLOR_PAIR(HEAD_COLOR));
+        mvwaddch(game, snakeYX[0][0], snakeYX[1][0], ' ');
+        wattroff(game, COLOR_PAIR(HEAD_COLOR));
+
+        wattron(game, COLOR_PAIR(TAIL_COLOR));
+        mvwaddch(game, snakeYX[0][1], snakeYX[1][1], ' ');
+        wattroff(game, COLOR_PAIR(TAIL_COLOR));
+
         wrefresh(game);
 
         //increase the snake size if a fruit was eaten
         if (snakeYX[0][0] == fruitYX[0] && snakeYX[1][0] == fruitYX[1]) {
             snakeLenght++;
             playerScore++;
+
+            wattron(game, COLOR_PAIR(TAIL_COLOR));
             mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
-            mvwprintw(score, 2, 10, "%d", playerScore);
+            wattroff(game, COLOR_PAIR(TAIL_COLOR));
+
             fruitCor(fruitYX, height, width);
-            mvwaddch(game, fruitYX[0], fruitYX[1], '@');
+
+            wattron(game, COLOR_PAIR(FRUIT_COLOR));
+            mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
+            wattroff(game, COLOR_PAIR(FRUIT_COLOR));
+
             wrefresh(game);
+
+            mvwprintw(score, 2, 10, "%d", playerScore);
             wrefresh(score);
         }
 
