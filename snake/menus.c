@@ -1,4 +1,9 @@
 #include <ncurses.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include "main.h"
+
+#define BORDER_COLOR 5
 
 int difficultyMenu(int difficultyLvl, int height, int width, int startY, int startX) {
     
@@ -10,7 +15,7 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
 
     WINDOW * difficultyMenuWin = newwin(height, width, startY, startX);
     refresh();
-    box (difficultyMenuWin, 0, 0);
+    difficultyMenuWin = setBox(difficultyMenuWin);
     wrefresh(difficultyMenuWin);
     keypad(difficultyMenuWin, TRUE);
     while (onMenu) {
@@ -43,7 +48,7 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
             case (10):
                 switch (highlight) {
                     case (0):
-                        return 100000;
+                        return 40000;
                         delwin(difficultyMenuWin);
                         onMenu = 0;
                         break;
@@ -73,12 +78,12 @@ int Leaderboard(int height, int width, int startY, int startX) {
 
     WINDOW * leaderboardWin = newwin(height, width, startY, startX);
     refresh();
-    box(leaderboardWin, 0, 0);
+    leaderboardWin = setBox(leaderboardWin);
     wrefresh(leaderboardWin);
 
     scoreFile = fopen("highScore.txt", "r");
     if (scoreFile == NULL) {
-        mvwprintw(leaderboardWin, (height/2), (width/2 - 12), "No High Score File..");
+        mvwprintw(leaderboardWin, (height/2), (width/2 - 12), "No High Score File..¯\\_(-_-)_/¯");
         wrefresh(leaderboardWin);
         input = wgetch(leaderboardWin); //getting the key that was pressed
         return 1;
@@ -88,6 +93,24 @@ int Leaderboard(int height, int width, int startY, int startX) {
         mvwprintw(leaderboardWin, (height/2 + i), (width/2), "%d : %d", i, printScore);
     }
     input = wgetch(leaderboardWin); //getting the key that was pressed
+    delwin(leaderboardWin);
 
 }
 
+void fuckMeUp(int height, int width, int startY, int startX) {
+
+    int running = 1;
+
+    WINDOW *  fuckMeUpWin = newwin(height, width, startY, startX);
+    refresh();
+    fuckMeUpWin = setBox(fuckMeUpWin);
+    wrefresh(fuckMeUpWin);
+
+    while (running) {
+        bkgd(COLOR_PAIR(rand() % 5));
+        refresh();
+        wbkgd(fuckMeUpWin, COLOR_PAIR(rand() % 5));
+        wrefresh(fuckMeUpWin);
+        usleep(100000);
+    }
+}

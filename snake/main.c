@@ -11,10 +11,17 @@
 
 int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;
-int difficulty = 100000; //default is easy
+int difficulty = 40000; //default is easy
 int highScore = 0, gameScore = 0;
 int err = 0;
 FILE *highScoreFile;
+
+WINDOW * setBox(WINDOW * win) {
+    wattron(win, COLOR_PAIR(BORDER_COLOR));
+    box (win, 0, 0);
+    wattroff(win, COLOR_PAIR(BORDER_COLOR));
+    return win;
+}
 
 void checkScore(int gameScore) {
     int allScore[5] = {0};
@@ -96,9 +103,7 @@ void mainMenu(void) {
     setScreen();
     WINDOW * mainMenu = newwin(height, width, startY, startX);
     refresh();
-    //box (mainMenu, 0, 0);
-    mainMenu = setBox(mainMenu, 5);
-    
+    mainMenu = setBox(mainMenu);
     wrefresh(mainMenu);
     keypad(mainMenu, TRUE);
     
@@ -135,6 +140,12 @@ void mainMenu(void) {
                 if (highlight == mainMenuLen)
                     highlight = 0;
                 break;
+
+            case ('&'):
+                delwin(mainMenu);
+                fuckMeUp(height, width, startY, startX);
+                goto mainMenuInt;
+
             
             case (10):
                 switch (highlight) {
@@ -161,6 +172,7 @@ void mainMenu(void) {
                         refresh();
                         endwin();
                         break;
+
                 }
         }
 

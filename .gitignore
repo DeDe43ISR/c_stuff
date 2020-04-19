@@ -1,0 +1,13 @@
+#I am ignoring even you ¯\_(ツ)_/¯
+
+#ignore score records /bin dir
+snake/highScore.txt
+snake/bin
+
+#ignore build files
+*.o
+
+#ignore .swp files
+*.swp
+
+

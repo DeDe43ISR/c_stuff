@@ -1,19 +1,25 @@
-CC=gcc
-CFLAGS=-lncurses -Wall
+#I Will Make You Happy :)
 
-all: snake
+CC=gcc
+CFLAGS=-lncurses -Wall -Wextra -g3 -fsanitize=address -fno-omit-frame-pointer -lasan
+OUT_DIR=./bin
+
+all: directories snake
+
+directories:
+	mkdir -p $(OUT_DIR)
 
 snake: main.o menus.o game.o
-	$(CC) main.o menus.o game.o -o snake $(CFLAGS)
+	$(CC) $(OUT_DIR)/main.o $(OUT_DIR)/menus.o $(OUT_DIR)/game.o -o $(OUT_DIR)/snake $(CFLAGS)
 
 main.o: main.c
-	$(CC) -c main.c
+	$(CC) -c main.c -o $(OUT_DIR)/main.o
 
 menus.o: menus.c
-	$(CC) -c menus.c
+	$(CC) -c menus.c -o $(OUT_DIR)/menus.o
 
 game.o: game.c
-	$(CC) -c game.c
+	$(CC) -c game.c -o $(OUT_DIR)/game.o
 
 clean:
-	rm -f main.o game.o menus.o snake
+	rm -rf $(OUT_DIR)

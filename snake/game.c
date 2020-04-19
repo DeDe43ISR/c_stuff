@@ -1,6 +1,7 @@
 #include<ncurses.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "main.h"
 
 #define FRUIT_COLOR 1
 #define BLACK_COLOR 2
@@ -16,11 +17,11 @@ int playerScore = 0;
 int input = 0;
 int keepMove;
 
-WINDOW * setBox(WINDOW * win, int  color) {
-    wattron(win, COLOR_PAIR(color));
-    box (win, 0, 0);
-    wattroff(win, COLOR_PAIR(color));
-    return win;
+WINDOW * printDot(WINDOW * win, int y, int x, int color) {
+        wattron(win, COLOR_PAIR(color));
+        mvwaddch(win, y, x,' ');
+        wattroff(win, COLOR_PAIR(color));
+        return win;
 }
 
 //move the snake according to the keys that are being pressed
@@ -85,12 +86,7 @@ int play(int difficulty, int height, int width, int startY, int startX) {
     WINDOW * game = newwin(height, width, startY, startX);
     refresh();
 
-/*
-    wattron(game, COLOR_PAIR(BORDER_COLOR));
-    box (game, 0, 0);
-    wattroff(game, COLOR_PAIR(BORDER_COLOR));
-*/
-    game = setBox(game, BORDER_COLOR);
+    game = setBox(game);
     keypad(game, TRUE);
     nodelay(game, TRUE);
 
@@ -116,33 +112,23 @@ int play(int difficulty, int height, int width, int startY, int startX) {
 
         moveSnake();
 
-        //print the snake and the fruit
-        mvwaddch(game, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], ' ');
-        
-        wattron(game, COLOR_PAIR(HEAD_COLOR));
-        mvwaddch(game, snakeYX[0][0], snakeYX[1][0], ' ');
-        wattroff(game, COLOR_PAIR(HEAD_COLOR));
-
-        wattron(game, COLOR_PAIR(TAIL_COLOR));
-        mvwaddch(game, snakeYX[0][1], snakeYX[1][1], ' ');
-        wattroff(game, COLOR_PAIR(TAIL_COLOR));
+        game = printDot(game, snakeYX[0][snakeLenght], snakeYX[1][snakeLenght], BLACK_COLOR); //remove the end of the snake
+        game = printDot(game, snakeYX[0][0], snakeYX[1][0], HEAD_COLOR); //print the head of the snake
+        game = printDot(game, snakeYX[0][1], snakeYX[1][1], TAIL_COLOR); //print the tail of the snake
 
         wrefresh(game);
 
         //increase the snake size if a fruit was eaten
         if (snakeYX[0][0] == fruitYX[0] && snakeYX[1][0] == fruitYX[1]) {
+
             snakeLenght++;
             playerScore++;
 
-            wattron(game, COLOR_PAIR(TAIL_COLOR));
-            mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
-            wattroff(game, COLOR_PAIR(TAIL_COLOR));
+            game = printDot(game, fruitYX[0], fruitYX[1], TAIL_COLOR); //remove the old fruit
 
             fruitCor(fruitYX, height, width);
 
-            wattron(game, COLOR_PAIR(FRUIT_COLOR));
-            mvwaddch(game, fruitYX[0], fruitYX[1], ' ');
-            wattroff(game, COLOR_PAIR(FRUIT_COLOR));
+            game = printDot(game, fruitYX[0], fruitYX[1], FRUIT_COLOR); //print the new fruit
 
             wrefresh(game);
 
@@ -158,10 +144,16 @@ int play(int difficulty, int height, int width, int startY, int startX) {
                 
         }
 
-        usleep(difficulty); //make the loop wait for some time
+        if (keepMove == KEY_LEFT || keepMove == KEY_RIGHT)
+                usleep(difficulty); //make the loop wait for some time
+
+        if (keepMove == KEY_UP || keepMove == KEY_DOWN)
+                usleep(difficulty*1.5); //make the loop wait for some time
+
+
         checkBor(height, width);
 
-        game = setBox(game, BORDER_COLOR);
+        game = setBox(game);
 
     }
     delwin(game);
