@@ -6,6 +6,7 @@
 #define BLACK_COLOR 2
 #define TAIL_COLOR 3
 #define HEAD_COLOR 4
+#define BORDER_COLOR 5
 
 int snakeYX[2][20];
 int snakeLenght = 10;
@@ -14,6 +15,13 @@ int fruitYX[2] = {9, 17};
 int playerScore = 0;
 int input = 0;
 int keepMove;
+
+WINDOW * setBox(WINDOW * win, int  color) {
+    wattron(win, COLOR_PAIR(color));
+    box (win, 0, 0);
+    wattroff(win, COLOR_PAIR(color));
+    return win;
+}
 
 //move the snake according to the keys that are being pressed
 void moveSnake(void) {
@@ -76,7 +84,13 @@ int play(int difficulty, int height, int width, int startY, int startX) {
     //game window initialization
     WINDOW * game = newwin(height, width, startY, startX);
     refresh();
+
+/*
+    wattron(game, COLOR_PAIR(BORDER_COLOR));
     box (game, 0, 0);
+    wattroff(game, COLOR_PAIR(BORDER_COLOR));
+*/
+    game = setBox(game, BORDER_COLOR);
     keypad(game, TRUE);
     nodelay(game, TRUE);
 
@@ -86,12 +100,6 @@ int play(int difficulty, int height, int width, int startY, int startX) {
     box (score, 0, 0);
     mvwprintw(score, 2 , 2, "Score : %d", playerScore);
     wrefresh(score);
-
-    start_color();
-    init_pair(FRUIT_COLOR, COLOR_RED, COLOR_RED);
-    init_pair(BLACK_COLOR, COLOR_BLACK, COLOR_BLACK);
-    init_pair(TAIL_COLOR, COLOR_GREEN, COLOR_GREEN);
-    init_pair(HEAD_COLOR, COLOR_BLUE, COLOR_BLUE);
 
     //prints first fruit
     wattron(game, COLOR_PAIR(FRUIT_COLOR));
@@ -152,7 +160,8 @@ int play(int difficulty, int height, int width, int startY, int startX) {
 
         usleep(difficulty); //make the loop wait for some time
         checkBor(height, width);
-        box (game, 0, 0); // fixing the borders
+
+        game = setBox(game, BORDER_COLOR);
 
     }
     delwin(game);

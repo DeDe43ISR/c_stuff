@@ -3,6 +3,12 @@
 #include <unistd.h>
 #include "function.h"
 
+#define FRUIT_COLOR 1
+#define BLACK_COLOR 2
+#define TAIL_COLOR 3
+#define HEAD_COLOR 4
+#define BORDER_COLOR 5
+
 int menuInput = 0;
 int yMax, xMax, height, width, startY, startX;
 int difficulty = 100000; //default is easy
@@ -90,7 +96,9 @@ void mainMenu(void) {
     setScreen();
     WINDOW * mainMenu = newwin(height, width, startY, startX);
     refresh();
-    box (mainMenu, 0, 0);
+    //box (mainMenu, 0, 0);
+    mainMenu = setBox(mainMenu, 5);
+    
     wrefresh(mainMenu);
     keypad(mainMenu, TRUE);
     
@@ -167,6 +175,13 @@ int main () {
     noecho();
     cbreak();
     curs_set(0);
+
+    start_color();
+    init_pair(FRUIT_COLOR, COLOR_RED, COLOR_RED);
+    init_pair(BLACK_COLOR, COLOR_BLACK, COLOR_BLACK);
+    init_pair(TAIL_COLOR, COLOR_GREEN, COLOR_GREEN);
+    init_pair(HEAD_COLOR, COLOR_BLUE, COLOR_BLUE);
+    init_pair(BORDER_COLOR, COLOR_MAGENTA, COLOR_MAGENTA);
 
     mainMenu();
 
