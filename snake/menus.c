@@ -33,7 +33,6 @@ int difficultyMenu(int difficultyLvl, int height, int width, int startY, int sta
             case (KEY_UP):
                 highlight--;
                 if (highlight == -1)
-                        // do we need size_of here ?
                     highlight = (difficultyMenuLen - 1);
                 break;
 
@@ -73,11 +72,15 @@ int Leaderboard(int height, int width, int startY, int startX) {
     
     FILE *scoreFile;
     int printScore, input;
+    int highlight = 0, onMenu = 1;
+    char leaderBoardOption[2][15] = {"Delete Data", "Back"};
+    size_t leaderBoardMenuLen = sizeof(leaderBoardOption)/sizeof(leaderBoardOption[0]);
 
     WINDOW * leaderboardWin = newwin(height, width, startY, startX);
     refresh();
     leaderboardWin = setBox(leaderboardWin);
     wrefresh(leaderboardWin);
+    keypad(leaderboardWin, TRUE);
 
     scoreFile = fopen("highScore.txt", "r");
     if (scoreFile == NULL) {
@@ -92,7 +95,46 @@ int Leaderboard(int height, int width, int startY, int startX) {
     for(int i = 1;fscanf(scoreFile, "%d\n", &printScore) != EOF;i++) {
         mvwprintw(leaderboardWin, (4 + i), (width/2 - 5), "%d : %d", i, printScore);
     }
-    input = wgetch(leaderboardWin); //getting the key that was pressed
+    
+    while (onMenu) {
+        for (int i = 0; i < 2; i++) {
+            if (i == highlight)
+                wattron(leaderboardWin, A_REVERSE);
+
+            mvwprintw(leaderboardWin, (height - 5 + i), (width - 15) ,leaderBoardOption[i]);
+            wattroff(leaderboardWin, A_REVERSE);
+        }
+        wrefresh(leaderboardWin);
+        input = wgetch(leaderboardWin); //getting the key that was pressed
+
+        switch (input) {
+            case (KEY_UP):
+                highlight--;
+                if (highlight == -1)
+                    highlight = (leaderBoardMenuLen - 1);
+                break;
+
+            case (KEY_DOWN):
+                highlight++;
+                if (highlight == leaderBoardMenuLen)
+                    highlight = 0;
+                break;
+            
+            case (10):
+                switch (highlight) {
+                    case (0):
+                        remove("highScore.txt");
+                        delwin(leaderboardWin);
+                        onMenu = 0;
+                        break;
+                        
+                    case (1):
+                        delwin(leaderboardWin);
+                        onMenu = 0;
+                        break;
+            }
+        }
+    }
     delwin(leaderboardWin);
 
 }
