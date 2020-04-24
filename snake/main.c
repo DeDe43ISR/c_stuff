@@ -14,6 +14,7 @@ int yMax, xMax, height, width, startY, startX;
 int difficulty = 40000; //default is easy
 int highScore = 0, gameScore = 0;
 int err = 0;
+char nick[10];
 FILE *highScoreFile;
 
 WINDOW * setBox(WINDOW * win) {
@@ -60,7 +61,7 @@ void checkScore(int gameScore) {
         highScoreFile = fopen("highScore.txt","w");
 
         for (int i = 0; i < 5; i++)
-            fprintf(highScoreFile, "%d\n", allScore[i]);
+            fprintf(highScoreFile, "%s : %d\n",nick, allScore[i]);
 
         fclose(highScoreFile);
     }
@@ -88,7 +89,7 @@ void mainMenu(void) {
     
     char mainMenuOption[4][15] = {"Start", "Difficulty","Leaderboard", "Exit"};
     int highlight = 0;
-    size_t mainMenuLen = sizeof(mainMenuOption)/sizeof(mainMenuOption[0]);  // number of elements in mainMenuoPtion array 
+    size_t mainMenuLen = sizeof(mainMenuOption)/sizeof(mainMenuOption[0]);  // number of elements in mainMenuoOption array 
     int onMenu = 1;
 
     highScoreFile = fopen("highScore.txt","r");
@@ -150,6 +151,13 @@ void mainMenu(void) {
             case (10):
                 switch (highlight) {
                     case (0):
+                        echo();
+                        wclear(mainMenu);
+                        mainMenu = setBox(mainMenu);
+                        mvwprintw(mainMenu, (height/2), (width/2 - 12) , "Please enter nick : ");
+                        wrefresh(mainMenu);
+                        mvwgetstr(mainMenu, (height/2), (width/2 + 8),nick);
+                        noecho();
                         delwin(mainMenu);
                         gameScore = play(difficulty, height, width, startY, startX);
                         checkScore(gameScore);

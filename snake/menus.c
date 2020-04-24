@@ -74,6 +74,7 @@ int Leaderboard(int height, int width, int startY, int startX) {
     int printScore, input;
     int highlight = 0, onMenu = 1;
     char leaderBoardOption[2][15] = {"Delete Data", "Back"};
+    char playerNick[10];
     size_t leaderBoardMenuLen = sizeof(leaderBoardOption)/sizeof(leaderBoardOption[0]);
 
     WINDOW * leaderboardWin = newwin(height, width, startY, startX);
@@ -92,8 +93,9 @@ int Leaderboard(int height, int width, int startY, int startX) {
 
     mvwprintw(leaderboardWin, 3, (width/2 - 8), "LeaderBoard");
 
-    for(int i = 1;fscanf(scoreFile, "%d\n", &printScore) != EOF;i++) {
-        mvwprintw(leaderboardWin, (4 + i), (width/2 - 5), "%d : %d", i, printScore);
+    //prints the leaderboard
+    for(int i = 1;fscanf(scoreFile, "%s : %d\n", playerNick, &printScore) != EOF;i++) {
+        mvwprintw(leaderboardWin, (4 + i), (width/2 - 8), "%d.%s -  %d", i,playerNick, printScore);
     }
     
     while (onMenu) {
