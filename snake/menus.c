@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include "main.h"
 
-#define BORDER_COLOR 5
-
 int difficultyMenu(int difficultyLvl, int height, int width, int startY, int startX) {
     
     int onMenu = 1;
