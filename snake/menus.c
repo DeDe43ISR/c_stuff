@@ -87,8 +87,10 @@ int Leaderboard(int height, int width, int startY, int startX) {
         return 1;
     }
 
+    mvwprintw(leaderboardWin, 3, (width/2 - 8), "LeaderBoard");
+
     for(int i = 1;fscanf(scoreFile, "%d\n", &printScore) != EOF;i++) {
-        mvwprintw(leaderboardWin, (height/2 + i), (width/2), "%d : %d", i, printScore);
+        mvwprintw(leaderboardWin, (4 + i), (width/2 - 5), "%d : %d", i, printScore);
     }
     input = wgetch(leaderboardWin); //getting the key that was pressed
     delwin(leaderboardWin);
