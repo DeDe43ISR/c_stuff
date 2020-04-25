@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include "function.h"
 
 #define FRUIT_COLOR 1
@@ -26,6 +27,8 @@ WINDOW * setBox(WINDOW * win) {
 
 void checkScore(int gameScore) {
     int allScore[5] = {0};
+    char allNicks[5][10];
+    char tempString[10];
     int rating, tempScore;
     bool reWrite = false;
 
@@ -39,29 +42,30 @@ void checkScore(int gameScore) {
 
     //save all scores to array
     highScoreFile = fopen("highScore.txt","r");
-    for (int i = 0; i < 5; i++)
-        fscanf(highScoreFile, "%d", &allScore[i]);
+    for (int i = 0; i < 5; i++) {
+        fscanf(highScoreFile, "%s : %d\n",allNicks[i], &allScore[i]);
+    }
 
-    //check if current score is higher and re-write the file if he does
     fclose(highScoreFile);
+    //check if current score is higher and re-write the file if he does
     for (int i = 0; i < 5; i++) {
         if (gameScore > allScore[i]) {
             reWrite = TRUE;
             rating = i;
-            while (i < 4) {
-                tempScore = allScore[i+1];
-                allScore[i+1] = allScore[i];
-                allScore[i+2] = tempScore;
-                i++;
+            for (int k = 4; k >= rating; k--) {
+                allScore[k] = allScore[k-1];
+                strcpy(tempString, allNicks[k-1]);
+                strcpy(allNicks[k], tempString);
             }
             allScore[rating] = gameScore;
+            i = 5;
         }
     }
     if (reWrite == TRUE) {
         highScoreFile = fopen("highScore.txt","w");
 
         for (int i = 0; i < 5; i++)
-            fprintf(highScoreFile, "%s : %d\n",nick, allScore[i]);
+            fprintf(highScoreFile, "%s : %d\n",allNicks[i], allScore[i]);
 
         fclose(highScoreFile);
     }
