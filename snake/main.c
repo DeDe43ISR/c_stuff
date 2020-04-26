@@ -25,7 +25,7 @@ WINDOW * setBox(WINDOW * win) {
     return win;
 }
 
-void checkScore(int gameScore) {
+void checkScore(int gameScore, char *gameNick) {
     int allScore[5] = {0};
     char allNicks[5][10];
     char tempString[10];
@@ -36,8 +36,12 @@ void checkScore(int gameScore) {
     highScoreFile = fopen("highScore.txt","r");
     if (highScoreFile == NULL) {
         highScoreFile = fopen("highScore.txt","w");
-        fprintf(highScoreFile, "%d", gameScore);
+        fprintf(highScoreFile, "%s : %d\n",gameNick ,gameScore);
+        for (int i = 0; i < 4;i++)
+            fprintf(highScoreFile, "bavner : 0\n");
+
         fclose(highScoreFile);
+        return;
     }
 
     //save all scores to array
@@ -52,7 +56,7 @@ void checkScore(int gameScore) {
         if (gameScore > allScore[i]) {
             reWrite = TRUE;
             rating = i;
-            for (int k = 4; k >= rating; k--) {
+            for (int k = 4; k > rating; k--) {
                 allScore[k] = allScore[k-1];
                 strcpy(tempString, allNicks[k-1]);
                 strcpy(allNicks[k], tempString);
@@ -164,7 +168,7 @@ void mainMenu(void) {
                         noecho();
                         delwin(mainMenu);
                         gameScore = play(difficulty, height, width, startY, startX);
-                        checkScore(gameScore);
+                        checkScore(gameScore, nick);
                         goto mainMenuInt;
                         break;
                         
