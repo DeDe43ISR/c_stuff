@@ -15,7 +15,7 @@ int yMax, xMax, height, width, startY, startX;
 int difficulty = 40000; //default is easy
 int highScore = 0, gameScore = 0;
 int err = 0;
-char nick[10];
+char nick[10], highScoreNick[10];
 FILE *highScoreFile;
 
 WINDOW * setBox(WINDOW * win) {
@@ -120,6 +120,10 @@ void mainMenu(void) {
     WINDOW * highScoreWin = newwin(5, (width/2), (startY - 5), (startX + (width/2)));
     refresh();
     box (highScoreWin, 0, 0);
+    if ((highScoreFile = fopen("highScore.txt","r")) != NULL) {
+        fscanf(highScoreFile, "%s : %d", highScoreNick, &highScore);
+        fclose(highScoreFile);
+    }
     mvwprintw(highScoreWin, 2 , 2, "High Score : %d", highScore);
     wrefresh(highScoreWin);
 
